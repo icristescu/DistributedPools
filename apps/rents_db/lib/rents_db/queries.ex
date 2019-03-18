@@ -32,7 +32,7 @@ defmodule RentsDb.Queries do
     |> Repo.all
   end
   def print_all(:appartments) do
-    from(a in Appartment, select: {a.id, a.building_id, a.rent_month})
+    from(a in Appartment, select: {a.id, a.unit_number, a.building_id, a.rent_month})
     |> Repo.all
   end
   def print_all(:tenants) do
