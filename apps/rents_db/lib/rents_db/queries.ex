@@ -24,7 +24,7 @@ defmodule RentsDb.Queries do
   end
 
   def print_all(:complex) do
-    q = from(i in Complex, select: %{name: i.name}, group_by: i.name)
+    q = from(i in Complex, select: %{name: i.name}, order_by: i.name)
     Repo.all(q)
   end
   def print_all(:building) do
