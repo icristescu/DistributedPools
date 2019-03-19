@@ -1,7 +1,13 @@
 defmodule RentsDb.Queries do
-  alias RentsDb.{Appartment, Complex, Building, Tenant, Repo}
+  alias RentsDb.{Appartment, Complex, Building, Tenant, Request, Repo}
 
   import Ecto.Query
+
+  def read_json(filename) do
+    with {:ok, body} <- File.read(filename),
+         {:ok, json} <- Poison.decode(body), do: json
+  end
+
 
   def create(:complex,params) do
     Complex.changeset(%Complex{}, params)
@@ -14,6 +20,12 @@ defmodule RentsDb.Queries do
   def create(:tenant, name) do
     Tenant.changeset(%Tenant{}, %{name: name})
     |> insert
+  end
+  def create(:request, filename) do
+    filename
+    |> read_json
+    |> Enum.map(&Request.changeset(%Request{}, &1))
+    |> Enum.map(&insert(&1))
   end
 
   defp insert(cs) do
@@ -42,8 +54,12 @@ defmodule RentsDb.Queries do
   def print_all(:requests) do
     "requests"
     |> select([:id, :apt_id])
+    |> Repo.all
   end
-
+  def print_all(:apt_tenants) do
+    Ecto.Adapters.SQL.query(Repo, "select * from apt_tenants")
+    #also: RentsDb.Repo.query("select * from apt_tenants")
+  end
 
   def min_rent(rent) do
     from(a in Appartment,

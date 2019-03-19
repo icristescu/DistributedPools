@@ -1,0 +1,10 @@
+[{
+    "apt_id": 2,
+    "status": "opened",
+    "description": "to rent"
+},
+{
+    "apt_id": 2,
+    "status": "closed",
+    "description": "to clean"
+}]
