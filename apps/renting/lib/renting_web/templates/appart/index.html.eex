@@ -1,0 +1,26 @@
+<h1>Listing Appartements</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Rent per day</th>
+      <th>Description</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for appart <- @apparts do %>
+    <tr>
+      <td><%= appart.id %></td>
+      <td><%= appart.rent_day %></td>
+      <td><%= appart.description %></td>
+
+      <td>
+        <%= link "Make a request", to: Routes.request_path(@conn, :new) %>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
