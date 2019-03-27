@@ -35,7 +35,10 @@ defmodule Renting.Accounts do
       ** (Ecto.NoResultsError)
 
   """
-  def get_user!(id), do: Repo.get!(User, id)
+  def get_user!(id) do
+    #IO.inspect id, label: "id in get user"
+    Repo.get!(User, id)
+  end
 
   def get_user_by!(username), do: Repo.get_by!(User, username: username)
 
@@ -100,7 +103,7 @@ defmodule Renting.Accounts do
       %Ecto.Changeset{source: %User{}}
 
   """
-  def change_user(%User{} = user) do
+  def change_user(user) do
     User.changeset(user, %{})
   end
 end

@@ -20,6 +20,7 @@ defmodule RentingWeb.ConnCase do
       # Import conveniences for testing with connections
       use Phoenix.ConnTest
       alias RentingWeb.Router.Helpers, as: Routes
+      import Renting.TestHelpers
 
       # The default endpoint for testing
       @endpoint RentingWeb.Endpoint

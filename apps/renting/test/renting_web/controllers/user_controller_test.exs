@@ -1,10 +1,11 @@
 defmodule RentingWeb.UserControllerTest do
   use RentingWeb.ConnCase
 
+
   alias Renting.Accounts
 
-  @create_attrs %{name: "some name", password: "some password", username: "some username"}
-  @update_attrs %{name: "some updated name", password: "some updated password", username: "some updated username"}
+  @create_attrs %{name: "some name", password: "some_pass", username: "some username"}
+  @update_attrs %{name: "some updated name", password: "updated", username: "updated username"}
   @invalid_attrs %{name: nil, password: nil, username: nil}
 
   def fixture(:user) do
@@ -13,6 +14,8 @@ defmodule RentingWeb.UserControllerTest do
   end
 
   describe "index" do
+    setup [:log_user_in]
+
     test "lists all users", %{conn: conn} do
       conn = get(conn, Routes.user_path(conn, :index))
       assert html_response(conn, 200) =~ "Listing Users"
@@ -52,6 +55,8 @@ defmodule RentingWeb.UserControllerTest do
     end
   end
 
+
+  @tag :not_implemented
   describe "update user" do
     setup [:create_user]
 
@@ -69,20 +74,38 @@ defmodule RentingWeb.UserControllerTest do
     end
   end
 
+  @tag :not_implemented
   describe "delete user" do
-    setup [:create_user]
+    setup [:create_user, :log_user_in]
 
-    test "deletes chosen user", %{conn: conn, user: user} do
+    test "deletes chosen user", %{conn: conn, user: user, current_user: current_user} do
       conn = delete(conn, Routes.user_path(conn, :delete, user))
       assert redirected_to(conn) == Routes.user_path(conn, :index)
       assert_error_sent 404, fn ->
-        get(conn, Routes.user_path(conn, :show, user))
+        get(conn, Routes.user_path(conn, :show, user.id))
       end
     end
+  end
+
+  test "requires user authentication on index and show", %{conn: conn} do
+    Enum.each([
+      get(conn, Routes.user_path(conn, :index)),
+      get(conn, Routes.user_path(conn, :show, "1")),
+    ], fn conn ->
+      assert html_response(conn, 302)
+      assert conn.halted
+    end)
   end
 
   defp create_user(_) do
     user = fixture(:user)
     {:ok, user: user}
   end
+
+  defp log_user_in(_) do
+    user = fixture(:user)
+    conn = assign(build_conn(), :current_user, user)
+    {:ok, conn: conn, current_user: user}
+  end
+
 end

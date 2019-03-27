@@ -21,8 +21,13 @@ defmodule Renting.Req do
     Repo.all(Request)
   end
 
+  ##when called from the controller, an user is logged in
+  ##but schema testing (i.e. ReqTest) does not have access to a user,
+  ##so we keep both versions list_requests/0 and list_requests/1
+
   def list_requests(user) do
-    Repo.all(user_requests(user))
+    user_requests(user)
+    |> Repo.all
   end
 
   @doc """
@@ -41,7 +46,10 @@ defmodule Renting.Req do
   """
   def get_request!(id), do: Repo.get!(Request, id)
 
-  def get_request!(user, id), do: Repo.get!(user_requests(user), id)
+  def get_request!(user, id) do
+    user_requests(user)
+    |> Repo.get!(id)
+  end
 
   @doc """
   Creates a request.
@@ -124,6 +132,8 @@ defmodule Renting.Req do
 
   defp user_requests(user) do
     Ecto.assoc(user, :requests)
+    #user = Repo.preload(user, :requests)
+    #user.requests
   end
 
 end

@@ -32,13 +32,25 @@ defmodule RentingWeb.UserController do
   end
 
   def show(conn, %{"id" => id}) do
-    user = Accounts.get_user!(id)
-    render(conn, "show.html", user: user)
+    # if (is_binary(id)) do
+    #   {id, _} = Integer.parse(id)
+    #   user = Accounts.get_user!(id)
+    #   render(conn, "show.html", user: user)
+    # else
+      user = Accounts.get_user!(id)
+      render(conn, "show.html", user: user)
+    #end
   end
 
   def edit(conn, %{"id" => id}) do
+    # IO.puts "can you see this?"
+    # id = Integer.parse(id)
+    # IO.inspect id, label: "id in get user"
     user = Accounts.get_user!(id)
+    #IO.puts "can you see this? x2"
     changeset = Accounts.change_user(user)
+    #IO.puts "can you see this? x3"
+    #render(conn, "show.html", user: user)
     render(conn, "edit.html", user: user, changeset: changeset)
   end
 

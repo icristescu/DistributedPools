@@ -1,14 +1,17 @@
 defmodule Renting.AccountsTest do
   use Renting.DataCase
 
+  import Bcrypt
+
   alias Renting.Accounts
 
   describe "users" do
     alias Renting.Accounts.User
 
-    @valid_attrs %{name: "some name", password: "some password", username: "some username"}
-    @update_attrs %{name: "some updated name", password: "some updated password", username: "some updated username"}
+    @valid_attrs %{name: "some name", password: "some_pass", username: "some username"}
+    @update_attrs %{name: "some updated name", password: "update", username: "updated username"}
     @invalid_attrs %{name: nil, password: nil, username: nil}
+    @invalid_attrs_too_long %{name: "some name", password: "a very very long password", username: "username"}
 
     def user_fixture(attrs \\ %{}) do
       {:ok, user} =
@@ -32,7 +35,8 @@ defmodule Renting.AccountsTest do
     test "create_user/1 with valid data creates a user" do
       assert {:ok, %User{} = user} = Accounts.create_user(@valid_attrs)
       assert user.name == "some name"
-      assert user.password == "some password"
+      assert user.password == nil
+      assert (verify_pass("some_pass", user.password_hash))
       assert user.username == "some username"
     end
 
@@ -40,12 +44,17 @@ defmodule Renting.AccountsTest do
       assert {:error, %Ecto.Changeset{}} = Accounts.create_user(@invalid_attrs)
     end
 
+    test "create_user/1 with too long password returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Accounts.create_user(@invalid_attrs_too_long)
+    end
+
     test "update_user/2 with valid data updates the user" do
       user = user_fixture()
       assert {:ok, %User{} = user} = Accounts.update_user(user, @update_attrs)
       assert user.name == "some updated name"
-      assert user.password == "some updated password"
-      assert user.username == "some updated username"
+      assert user.password == nil
+      assert (verify_pass("update", user.password_hash))
+      assert user.username == "updated username"
     end
 
     test "update_user/2 with invalid data returns error changeset" do

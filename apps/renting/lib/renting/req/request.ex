@@ -22,7 +22,7 @@ defmodule Renting.Req.Request do
     |> validate_required([:nbdays])
     #|> foreign_key_constraint(:user_id, message: "Select a valid user id")
     #|> foreign_key_constraint(:appart_id, message: "Select a valid appart id")
-    #|> set_cost
+    |> set_cost
   end
 
   defp set_cost(cs) do

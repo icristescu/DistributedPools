@@ -15,7 +15,6 @@ defmodule RentingWeb.RequestController do
   end
 
   def new(conn, _params, user) do
-    IO.inspect user, label: "user in new request"
     changeset = Req.change_request(user, %Request{})
     render(conn, "new.html", changeset: changeset)
   end

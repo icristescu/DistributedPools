@@ -8,11 +8,13 @@ config :renting, RentingWeb.Endpoint,
 
 # Print only warnings and errors during test
 config :logger, level: :warn
+config :comeonin, :bcrypt_log_rounds, 4
+config :comeonin, :pbkdf2_rounds, 1
 
 # Configure your database
 config :renting, Renting.Repo,
-  username: "postgres",
-  password: "postgres",
+  username: "icristes",
+  password: "Sound1234",
   database: "renting_test",
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
