@@ -42,6 +42,10 @@ defmodule Renting.Accounts do
 
   def get_user_by!(username), do: Repo.get_by!(User, username: username)
 
+  # we also want the variant which does not fail
+  # for when an user tries to log in with an incorrect username
+  def get_user_by(username), do: Repo.get_by(User, username: username)
+
   @doc """
   Creates a user.
 

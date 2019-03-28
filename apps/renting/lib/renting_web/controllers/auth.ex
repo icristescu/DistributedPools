@@ -23,7 +23,8 @@ defmodule RentingWeb.Auth do
     end
   end
 
-  #function plus
+  #function plugs
+
   def authenticate(conn, _opts) do
     if conn.assigns.current_user do
       conn
@@ -43,7 +44,7 @@ defmodule RentingWeb.Auth do
   end
 
   def login_by_username_and_pass(conn, username, given_pass, _opts) do
-    user = Accounts.get_user_by!(username)
+    user = Accounts.get_user_by(username)
 
     cond do
       user && verify_pass(given_pass, user.password_hash) ->
@@ -57,7 +58,9 @@ defmodule RentingWeb.Auth do
   end
 
   def logout(conn) do
-    configure_session(conn, drop: true)
+    #conn = configure_session(conn, drop: true)
+    #IO.inspect get_session(conn, :user_id), label: "logout = "
+    clear_session(conn)
   end
 
 end
