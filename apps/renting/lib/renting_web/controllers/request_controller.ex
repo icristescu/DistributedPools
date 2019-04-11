@@ -1,8 +1,12 @@
 defmodule RentingWeb.RequestController do
   use RentingWeb, :controller
 
+  import RentingWeb.Auth, only: [authenticate: 2]
+
   alias Renting.Req
   alias Renting.Req.Request
+
+  plug :authenticate
 
   def action(conn, _) do
     apply(__MODULE__, action_name(conn),

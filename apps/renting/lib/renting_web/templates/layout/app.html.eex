@@ -10,16 +10,26 @@
   <body>
     <header>
        <section class="container">
-        <nav role="navigation">
+         <nav role="navigation">
+	   <style>
+	     ul { list-style-type: none; width: 100%;text-align:center;}
+	     ul li { float:left;}
+	     ul li a { display: block; padding: 10px; }
+	     ul li a:hover { background: lavenderblush; }
+	   </style>
           <ul>
-	    <ol class="breadcrumb text-right">
+	    <ol class="breadcrumb">
+	      <li><%= link "Home", to: Routes.page_path(@conn, :index) %></li>
 	      <%= if @current_user do %>
-	      <li><%= @current_user.username %></li> <li>
+	      <li><%= @current_user.username %></li>
 		<%= link "Log out", to: Routes.session_path(@conn, :delete, @current_user), method: "delete" %>
-	      </li>
+
 	      <% else %>
-	      <li><%= link "Register", to: Routes.user_path(@conn, :new) %></li> <li><%= link "Log in", to: Routes.session_path(@conn, :new) %></li>
+	      <li><%= link "Register", to: Routes.user_path(@conn, :new) %></li>
+	      <li><%= link "Log in", to: Routes.session_path(@conn, :new) %></li>
 	      <% end %>
+	      <li><%= link "Appartements", to: Routes.appart_path(@conn, :index) %></li>
+
 	    </ol>
 	  </ul>
        </section>
