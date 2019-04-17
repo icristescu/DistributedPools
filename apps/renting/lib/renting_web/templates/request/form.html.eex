@@ -13,13 +13,13 @@
   <%= number_input f, :nbdays %>
   <%= error_tag f, :nbdays %>
 
- <%= label f, :cost %>
+  <!-- <%= label f, :cost %>
   <%= number_input f, :cost %>
   <%= error_tag f, :cost %>
 
   <%= label f, :status %>
   <%= text_input f, :status %>
-  <%= error_tag f, :status %>
+  <%= error_tag f, :status %> -->
 
   <%= label f, :period %>
   <%= text_input f, :period %>

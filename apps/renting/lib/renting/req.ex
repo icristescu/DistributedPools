@@ -88,7 +88,10 @@ defmodule Renting.Req do
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_request(%Request{} = request, attrs) do
+  def update_request(request, attrs) do
+    IO.inspect request, label: "request = "
+    IO.inspect attrs, label: "attrs = "
+
     request
     |> Request.changeset(attrs)
     |> Repo.update()

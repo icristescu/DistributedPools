@@ -2,22 +2,22 @@
 
 <ul>
 
-  <li>
+  <li style="float:none">
     <strong>Nbdays:</strong>
     <%= @request.nbdays %>
   </li>
 
-  <li>
+  <li style="float:none">
     <strong>Cost:</strong>
     <%= @request.cost %>
   </li>
 
-  <li>
+  <li style="float:none">
     <strong>Status:</strong>
     <%= @request.status %>
   </li>
 
-  <li>
+  <li style="float:none">
     <strong>Period:</strong>
     <%= @request.period %>
   </li>

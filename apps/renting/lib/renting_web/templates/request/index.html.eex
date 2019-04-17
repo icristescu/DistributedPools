@@ -1,4 +1,4 @@
-<h1>Listing Requests</h1>
+<h1>Listing Requests for <%= @current_user.username %> </h1>
 
 <table>
   <thead>

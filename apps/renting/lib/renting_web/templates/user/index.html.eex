@@ -1,5 +1,6 @@
 <h1>Listing Users</h1>
 
+
 <table>
   <thead>
     <tr>
@@ -10,6 +11,7 @@
       <th></th>
     </tr>
   </thead>
+
   <tbody>
 <%= for user <- @users do %>
     <tr>
