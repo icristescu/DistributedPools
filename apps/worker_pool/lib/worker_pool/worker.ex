@@ -1,11 +1,13 @@
 defmodule WorkerPool.Worker do
   use GenServer
 
-  def start_link(_default) do
-    GenServer.start_link(__MODULE__, :ok)
+  def start_link(name) do
+    GenServer.start_link(__MODULE__, name, name: name)
   end
 
-  def init(:ok) do
+  def init(name) do
+    IO.puts "Worker #{name} started..."
+
     {:ok, %{}}
   end
 end

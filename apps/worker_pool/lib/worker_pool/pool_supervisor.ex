@@ -13,7 +13,7 @@ defmodule WorkerPool.PoolSupervisor do
 
     children = [
       {WorkerPool.PoolServer, ns},
-      # {WorkerPool.WorkerSupervisor, []}
+      {WorkerPool.WorkerSupervisor, ns}
     ]
 
     Supervisor.init(children, strategy: :one_for_all)

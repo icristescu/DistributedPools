@@ -3,11 +3,18 @@ defmodule WorkerPool.PoolsServer do
 
 
   def start_link(pools) do
-    GenServer.start_link(__MODULE__, pools)
+    GenServer.start_link(__MODULE__, pools, name: __MODULE__)
   end
 
-  def checkout(_pool_name) do
-    IO.puts "not implemented yet"
+  def checkout(pool_name) do
+    worker =
+      name(pool_name)
+      |> GenServer.call(:checkout)
+
+    if worker = nil do "no worker available"
+    else "checkout #{worker}"
+    end
+
   end
 
   def checkin(_pool_name,_worker_pid) do
@@ -15,11 +22,10 @@ defmodule WorkerPool.PoolsServer do
   end
 
   def status(pool_name) do
-    size =
-      pool_name
-      |> String.to_atom
+    {size, free} =
+      name(pool_name)
       |> GenServer.call(:status)
-    "status of #{pool_name} is #{size}"
+    "status of #{pool_name} is #{free} free workers out of #{size}"
   end
 
   def init(_pools) do
@@ -27,5 +33,9 @@ defmodule WorkerPool.PoolsServer do
     {:ok, %{}}
   end
 
+  defp name(pool_name) do
+    pool_name
+    |> String.to_atom
+  end
 
 end
