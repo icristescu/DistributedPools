@@ -9,23 +9,27 @@ defmodule WorkerPool.PoolsServer do
   def checkout(pool_name) do
     worker =
       name(pool_name)
-      |> GenServer.call(:checkout)
+      |> GenServer.call(:checkout) #calls PoolServer
 
-    if worker = nil do "no worker available"
-    else "checkout #{worker}"
+
+    if worker == nil do "no worker available"
+    else
+      IO.puts "checkout #{Atom.to_string(worker)}"
+      worker
     end
 
   end
 
-  def checkin(_pool_name,_worker_pid) do
-    IO.puts "not implemented yet"
+  def checkin(pool_name, worker_pid) do
+    name(pool_name)
+    |> GenServer.call({:checkin, worker_pid})
   end
 
   def status(pool_name) do
     {size, free} =
       name(pool_name)
-      |> GenServer.call(:status)
-    "status of #{pool_name} is #{free} free workers out of #{size}"
+      |> GenServer.call(:status) #calls PoolServer
+    "status of #{pool_name} is #{free} free out of #{size}"
   end
 
   def init(_pools) do

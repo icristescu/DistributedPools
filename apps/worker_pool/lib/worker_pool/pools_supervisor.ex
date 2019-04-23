@@ -12,10 +12,9 @@ defmodule WorkerPool.PoolsSupervisor do
     IO.puts "PoolsSupervisor started..."
 
     children =
-      pools
-      |> Enum.map(fn ns ->
-      id = String.to_atom(ns[:name])
-      Supervisor.child_spec({WorkerPool.PoolSupervisor, ns}, id: id) end)
+      Enum.map(pools, fn ns ->
+	id = String.to_atom(ns[:name])
+	Supervisor.child_spec({WorkerPool.PoolSupervisor, ns}, id: id) end)
 
     Supervisor.init(children, strategy: :one_for_one)
   end
