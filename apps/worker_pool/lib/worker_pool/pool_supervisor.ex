@@ -11,13 +11,18 @@ defmodule WorkerPool.PoolSupervisor do
   def init(ns) do
     IO.puts "PoolSupervisor started..."
 
+    worker_sup = supervisor_name(ns[:name])
+
     children = [
-      {WorkerPool.PoolServer, ns},
-      {WorkerPool.WorkerSupervisor, ns}
+      {WorkerPool.WorkerSupervisor, worker_sup},
+      {WorkerPool.PoolServer, {ns, worker_sup}}
     ]
 
     Supervisor.init(children, strategy: :one_for_all)
   end
 
+   defp supervisor_name(name) do
+    String.to_atom(name <> "_worker_supervisor")
+  end
 
 end

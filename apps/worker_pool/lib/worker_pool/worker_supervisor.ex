@@ -1,26 +1,16 @@
 defmodule WorkerPool.WorkerSupervisor do
-  use Supervisor
 
-  def start_link(ns) do
-    Supervisor.start_link(__MODULE__, ns)
+  use DynamicSupervisor
+  # use a dynamic supervisor because we need to control the death
+  # and rebirth of workers
+
+  def start_link(name) do
+    DynamicSupervisor.start_link(__MODULE__, name, name: name)
   end
 
-
-  ### callbacks ###
-
-  def init(ns) do
-    IO.puts "WorkerSupervisor started..."
-
-    range = 1..ns[:size]
-
-    children =
-      Enum.map(range, fn i ->
-	id = String.to_atom(ns[:name] <> "worker" <> Integer.to_string(i))
-	IO.inspect id, label: "worker name = "
-	Supervisor.child_spec({WorkerPool.Worker, id}, id: id) end)
-
-    Supervisor.init(children, strategy: :one_for_one)
+  def init(name) do
+    IO.puts "WorkerSupervisor #{Atom.to_string(name)} started..."
+    DynamicSupervisor.init(strategy: :one_for_one, restart: :temporary)
   end
-
 
 end
