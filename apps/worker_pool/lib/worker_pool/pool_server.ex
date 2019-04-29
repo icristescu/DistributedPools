@@ -74,18 +74,26 @@ defmodule WorkerPool.PoolServer do
     {:noreply, %{state | free_workers: [worker | workers]}}
   end
 
-  #if a worker dies, give a new worker to the consumer
+  #if a worker dies, alert the consumer
   def handle_info({:EXIT, pid, reason},
-    state = %{workers_registry: _reg, workers_name_pid: pid_name,
+    state = %{workers_registry: reg, workers_name_pid: pid_name,
 	      worker_sup: sup}) do
 
-    IO.puts "Worker #{pid} died: #{reason}"
+    IO.puts "Worker #{inspect pid} died: #{reason}"
 
-    #name = lookup_and_delete(pid_name, pid)
+    {:ok, name} = lookup_and_delete(pid_name, pid)
 
-    # {:ok, pid} = start_worker(sup, name)
-    #insert(pid_name, {pid, name})
-    # {:ok, ref} = lookup_and_delete(reg, worker)
+    case lookup_and_delete(reg, name) do
+      {:ok, ref} ->
+	Process.demonitor(ref)
+	IO.puts "the worker died, please make a new checkout"
+      :error -> ()
+    end
+
+
+    {:ok, pid} = start_worker(sup, name)
+    insert(pid_name, {pid, name})
+
     {:noreply, state}
   end
 
@@ -114,7 +122,6 @@ defmodule WorkerPool.PoolServer do
 
     Enum.each(workers, fn name ->
       {:ok, pid} = start_worker(worker_sup, name)
-      Process.link(pid)
       insert(table, {pid, name})
     end)
 
@@ -122,8 +129,11 @@ defmodule WorkerPool.PoolServer do
   end
 
   defp start_worker(worker_sup, name) do
-    spec = Supervisor.child_spec({WorkerPool.Worker, [name]}, id: name)
-    DynamicSupervisor.start_child(worker_sup, spec)
+    spec = Supervisor.child_spec({WorkerPool.Worker, [name]},
+      id: name, restart: :temporary)
+    {:ok, pid} = DynamicSupervisor.start_child(worker_sup, spec)
+    Process.link(pid)
+    {:ok, pid}
   end
 
 

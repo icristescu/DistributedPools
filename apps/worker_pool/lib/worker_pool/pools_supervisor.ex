@@ -2,7 +2,7 @@ defmodule WorkerPool.PoolsSupervisor do
   use Supervisor
 
   def start_link(pools) do
-    Supervisor.start_link(__MODULE__, pools)
+    Supervisor.start_link(__MODULE__, pools, name: __MODULE__)
   end
 
 
