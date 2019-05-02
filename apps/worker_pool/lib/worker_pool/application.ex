@@ -9,21 +9,20 @@ defmodule WorkerPool.Application do
     %{name: "pool1", size: 3},
     %{name: "pool2", size: 2},
   ]
+  @distributed true
 
   def start(_type, _args) do
-
-    # List all child processes to be supervised
-
     children = [
-      # Starts a worker by calling: WorkerPool.Worker.start_link(arg)
-      # {WorkerPool.Worker, arg},
-      {WorkerPool.MainSupervisor, @pools}
+      {WorkerPool.MainSupervisor, {@pools, @distributed}}
     ]
-
-    # See https://hexdocs.pm/elixir/Supervisor.html
-    # for other strategies and supported options
     opts = [strategy: :one_for_one, name: WorkerPool.Supervisor]
     Supervisor.start_link(children, opts)
+  end
+
+  def start_pools do
+    if @distributed do
+      WorkerPool.MainSupervisor.start_pools
+    end
   end
 
   def checkout(pool_name) do

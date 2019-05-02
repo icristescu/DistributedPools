@@ -5,9 +5,6 @@ defmodule WorkerPool.PoolSupervisor do
     Supervisor.start_link(__MODULE__, ns)
   end
 
-
-  ### callbacks ###
-
   def init(ns) do
     IO.puts "PoolSupervisor started..."
 

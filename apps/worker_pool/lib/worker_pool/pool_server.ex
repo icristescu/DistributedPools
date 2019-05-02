@@ -10,7 +10,8 @@ defmodule WorkerPool.PoolServer do
   end
 
   def start_link({ns,_} = args) do
-    GenServer.start_link(__MODULE__, args, name: String.to_atom(ns[:name]))
+    GenServer.start_link(__MODULE__, args,
+      name: {:global, String.to_atom(ns[:name])})
   end
 
   def init({ns, worker_sup}) do
@@ -87,7 +88,7 @@ defmodule WorkerPool.PoolServer do
       {:ok, ref} ->
 	Process.demonitor(ref)
 	IO.puts "the worker died, please make a new checkout"
-      :error -> ()
+      :error -> nil
     end
 
 

@@ -38,8 +38,9 @@ defmodule WorkerPool.PoolsServer do
   end
 
   defp name(pool_name) do
-    pool_name
+    name = pool_name
     |> String.to_atom
+    {:global, name}
   end
 
 end
