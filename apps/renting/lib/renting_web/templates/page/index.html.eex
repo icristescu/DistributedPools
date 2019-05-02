@@ -1,4 +1,0 @@
-<section class="phx-hero">
-  <h1><%= gettext "Welcome to %{name}!", name: "Rents Manager" %></h1>
-  <p>Rent nice appartements.</p>
-</section>
